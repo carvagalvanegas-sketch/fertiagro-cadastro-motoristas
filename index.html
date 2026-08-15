@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastros de Motoristas</title>
+<style>
+:root{
+  --green:#16833a;
+  --green-dark:#0f5f2a;
+  --bg:#f5f7f6;
+  --card:#fff;
+  --text:#17211b;
+  --muted:#6f7b74;
+  --border:#dfe6e1;
+  --soft:#eef5f0;
+  --danger:#b42318;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:rgba(15,95,42,.97);
+  backdrop-filter:blur(10px);
+  color:#fff;
+  border-bottom:1px solid #ffffff1f;
+}
+.headerInner{
+  max-width:980px;
+  margin:auto;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.brand h1{margin:0;font-size:18px;letter-spacing:.2px}
+.brand p{margin:3px 0 0;font-size:12px;opacity:.82}
+.newBtn{
+  width:auto;
+  border:1px solid rgba(255,255,255,.35);
+  background:#fff;
+  color:var(--green-dark);
+  border-radius:10px;
+  padding:10px 14px;
+  font-weight:900;
+  font-size:12px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+main{
+  max-width:980px;
+  margin:auto;
+  padding:18px 14px 40px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:0 8px 28px #0000000d;
+  overflow:hidden;
+}
+.cardHead{
+  padding:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid #edf1ee;
+}
+.cardHead h2{
+  margin:0;
+  color:var(--green-dark);
+  font-size:18px;
+}
+.countBadge{
+  font-size:11px;
+  font-weight:900;
+  color:var(--green-dark);
+  background:var(--soft);
+  padding:7px 10px;
+  border-radius:999px;
+}
+.toolbar{
+  padding:14px 18px;
+  border-bottom:1px solid #edf1ee;
+}
+input,select,button{font:inherit}
+input,select{
+  width:100%;
+  height:46px;
+  padding:0 12px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:#fff;
+  color:var(--text);
+  transition:.18s ease;
+}
+input::placeholder{color:#9aa39e}
+input:focus,select:focus{
+  outline:none;
+  border-color:#66a97a;
+  box-shadow:0 0 0 3px #16833a12;
+}
+.savedList{
+  display:grid;
+  gap:8px;
+  padding:14px 18px 18px;
+}
+.savedItem{
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:#fff;
+  overflow:hidden;
+}
+.savedSummary{
+  padding:13px;
+  display:grid;
+  grid-template-columns:1.6fr 1fr .8fr auto;
+  gap:12px;
+  align-items:center;
+  cursor:pointer;
+}
+.savedName{font-weight:900;font-size:13px}
+.savedSmall{font-size:11px;color:var(--muted)}
+.savedPlate{font-weight:900;font-size:12px}
+.savedDetails{
+  display:none;
+  padding:12px 13px 13px;
+  border-top:1px solid #edf1ee;
+  font-size:12px;
+  color:#47534c;
+  line-height:1.65;
+}
+.savedItem.open .savedDetails{display:block}
+.savedActions{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+.savedActions button{
+  width:auto;
+  min-width:105px;
+  padding:9px 12px;
+  font-size:11px;
+  border-radius:9px;
+  border:0;
+  font-weight:900;
+  cursor:pointer;
+}
+.printBtn{background:#eef5f0;color:var(--green-dark);border:1px solid #cfe0d4!important}
+.pdfBtn{background:var(--green-dark);color:#fff}
+.deleteBtn{background:#fff3f2;color:var(--danger);border:1px solid #f1d3cf!important}
+.empty{
+  text-align:center;
+  padding:34px 20px;
+  color:var(--muted);
+  font-size:12px;
+}
+.empty strong{
+  display:block;
+  color:var(--green-dark);
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+/* Modal principal de novo cadastro */
+.formModal{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  padding:18px 12px;
+  background:rgba(7,20,12,.58);
+  overflow:auto;
+}
+.formModal.open{display:flex}
+.formCard{
+  width:min(100%,850px);
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+  overflow:hidden;
+  margin:auto;
+}
+.modalHead{
+  position:sticky;
+  top:0;
+  z-index:3;
+  background:#fff;
+  border-bottom:1px solid #edf1ee;
+  padding:15px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.modalHead h2{
+  margin:0;
+  color:var(--green-dark);
+  font-size:18px;
+}
+.closeBtn{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:#425047;
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+}
+.formBody{padding:12px 18px 20px}
+.section{
+  padding:16px 0 6px;
+  border-top:1px solid #edf1ee;
+}
+.section:first-child{border-top:0;padding-top:4px}
+.sectionTitle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0 0 12px;
+  font-size:12px;
+  color:var(--green-dark);
+  font-weight:900;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 0 4px #16833a14;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.field{min-width:0}
+.field.full{grid-column:1/-1}
+label{
+  display:block;
+  margin:0 0 6px;
+  font-size:11px;
+  font-weight:800;
+  color:#405047;
+  letter-spacing:.25px;
+}
+.phoneRow{
+  display:grid;
+  grid-template-columns:105px 1fr;
+  gap:8px;
+}
+.hint{
+  margin-top:5px;
+  font-size:10px;
+  color:var(--muted);
+}
+.photoSection{
+  margin-top:14px;
+  padding:14px;
+  border:1px dashed #b7c6bc;
+  border-radius:14px;
+  background:#fbfcfb;
+}
+.photoTop{
+  display:grid;
+  grid-template-columns:112px 1fr;
+  gap:14px;
+  align-items:center;
+}
+.photoBox{
+  width:112px;
+  height:112px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  padding:8px;
+}
+.photoBox img{width:100%;height:100%;object-fit:cover}
+.photoMeta{display:flex;flex-direction:column;gap:8px}
+.photoMeta p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+.fileRow{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+}
+.fileRow input{height:auto;padding:9px}
+.formActions{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:9px;
+  margin-top:18px;
+}
+button{
+  border-radius:11px;
+  padding:12px 14px;
+  font-weight:900;
+  cursor:pointer;
+}
+.primary{background:var(--green);color:#fff;border:0}
+.secondary{background:#44554b;color:#fff;border:0}
+.ghost{background:var(--soft);color:var(--green-dark);border:1px solid #d6e2da}
+.photoButton{
+  width:100%;
+  margin-top:12px;
+  background:#0f5f2a;
+  color:#fff;
+  min-height:48px;
+  border:0;
+}
+.formMsg{
+  display:none;
+  margin-top:12px;
+  padding:11px 12px;
+  border-radius:11px;
+  background:#eaf7ee;
+  color:#11632c;
+  border:1px solid #cce8d3;
+  font-size:12px;
+  font-weight:800;
+}
+
+/* Modal da câmera */
+.cameraModal{
+  position:fixed;
+  inset:0;
+  z-index:999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:12px;
+  background:rgba(0,0,0,.78);
+}
+.cameraCard{
+  width:min(100%,720px);
+  background:#111612;
+  color:#fff;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,.5);
+}
+.cameraHeader{padding:14px 16px;background:#171d19}
+.cameraHeader h3{margin:0;font-size:17px}
+.cameraHeader p{margin:4px 0 0;font-size:12px;opacity:.78}
+.cameraView{
+  position:relative;
+  aspect-ratio:4/3;
+  background:#000;
+  overflow:hidden;
+}
+#cameraVideo,#captureCanvas{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+#captureCanvas{display:none}
+.guideOverlay{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.guideOverlay:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.16);
+}
+.headGuide{
+  position:relative;
+  z-index:2;
+  width:min(58vw,270px);
+  height:min(74vw,350px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.head{
+  width:42%;
+  height:29%;
+  border:3px dashed rgba(255,255,255,.95);
+  border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+.shoulders{
+  width:86%;
+  height:43%;
+  margin-top:10px;
+  border:3px dashed rgba(255,255,255,.95);
+  border-top:none;
+  border-radius:42px 42px 150px 150px;
+  background:rgba(255,255,255,.04);
+}
+.guideText{
+  position:absolute;
+  bottom:18px;
+  z-index:3;
+  left:12px;
+  right:12px;
+  text-align:center;
+  font-size:13px;
+  font-weight:800;
+  text-shadow:0 2px 8px #000;
+}
+.cameraActions{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:9px;
+  padding:12px;
+  background:#171d19;
+}
+
+@media(max-width:680px){
+  .headerInner{padding:12px 14px}
+  .brand h1{font-size:16px}
+  .brand p{display:none}
+  .newBtn{padding:9px 11px;font-size:11px}
+  main{padding:12px 10px 28px}
+  .card{border-radius:15px}
+  .cardHead{padding:15px 14px}
+  .toolbar{padding:12px 14px}
+  .savedList{padding:12px 14px 16px}
+  .savedSummary{grid-template-columns:1fr auto;gap:4px 10px}
+  .savedSummary .phoneCol{grid-column:1}
+  .savedSummary .dateCol{grid-column:1}
+  .savedSummary .plateCol{grid-column:2;grid-row:1}
+  .savedActions button{flex:1;min-width:0}
+  .formModal{padding:0}
+  .formCard{min-height:100%;border-radius:0;margin:0}
+  .modalHead{padding:13px 14px}
+  .formBody{padding:8px 14px 20px}
+  .grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .photoTop{grid-template-columns:90px 1fr}
+  .photoBox{width:90px;height:90px}
+  .formActions{grid-template-columns:1fr}
+  .cameraActions{grid-template-columns:1fr}
+}
+@media print{
+  header,.savedActions,.toolbar,.newBtn,.formModal,.cameraModal{display:none!important}
+  body{background:#fff}
+  main{padding:0}
+  .card{box-shadow:none;border:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="headerInner">
+    <div class="brand">
+      <h1>CADASTROS DE MOTORISTAS</h1>
+      <p>Consulta e gerenciamento de cadastros</p>
+    </div>
+    <button class="newBtn" type="button" onclick="abrirNovoCadastro()">+ NOVO CADASTRO</button>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <div class="cardHead">
+      <h2>CADASTROS SALVOS</h2>
+      <span class="countBadge" id="savedCount">0 REGISTROS</span>
+    </div>
+
+    <div class="toolbar">
+      <input id="buscaCadastro" placeholder="Pesquisar nome, CPF ou placa..." oninput="renderCadastros()">
+    </div>
+
+    <div id="savedList" class="savedList"></div>
+  </section>
+</main>
+
+<!-- NOVO CADASTRO -->
+<div class="formModal" id="formModal">
+  <div class="formCard">
+    <div class="modalHead">
+      <h2>NOVO CADASTRO</h2>
+      <button class="closeBtn" type="button" onclick="fecharNovoCadastro()" aria-label="Fechar">×</button>
+    </div>
+
+    <form id="cadastroForm" class="formBody">
+      <section class="section">
+        <div class="sectionTitle"><span class="dot"></span>IDENTIFICAÇÃO</div>
+        <div class="grid">
+          <div class="field full">
+            <label>NOME DO MOTORISTA *</label>
+            <input id="nome" required autocomplete="name" placeholder="Nome completo">
+          </div>
+
+          <div class="field">
+            <label>CPF *</label>
+            <input id="cpf" inputmode="numeric" maxlength="14" placeholder="000.000.000-00">
+          </div>
+
+          <div class="field">
+            <label>RG</label>
+            <input id="rg" placeholder="Número do RG">
+          </div>
+
+          <div class="field full">
+            <label>DATA DE NASCIMENTO *</label>
+            <input id="dataNascimento" type="date" required>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sectionTitle"><span class="dot"></span>CONTATO</div>
+        <div class="grid">
+          <div class="field full">
+            <label>TELEFONE / WHATSAPP</label>
+            <div class="phoneRow">
+              <select id="paisTelefone" aria-label="Código do país">
+                <option value="55">🇧🇷 +55</option>
+                <option value="58">🇻🇪 +58</option>
+              </select>
+              <input id="telefone" inputmode="numeric" maxlength="11" placeholder="00000000000" oninput="limitarTelefone(this)">
+            </div>
+            <div class="hint">SOMENTE NÚMEROS — MÁXIMO DE 11 DÍGITOS.</div>
+          </div>
+
+          <div class="field full">
+            <label>E-MAIL</label>
+            <input id="email" type="email" autocomplete="email" placeholder="exemplo@email.com">
+          </div>
+
+          <div class="field">
+            <label>CEP</label>
+            <input id="cep" inputmode="numeric" maxlength="9" placeholder="00000-000">
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sectionTitle"><span class="dot"></span>VEÍCULO E EMPRESA</div>
+        <div class="grid">
+          <div class="field">
+            <label>PLACA DO VEÍCULO *</label>
+            <input id="placa" required maxlength="8" placeholder="ABC1D23" style="text-transform:uppercase">
+          </div>
+
+          <div class="field">
+            <label>CNPJ</label>
+            <input id="cnpj" inputmode="numeric" maxlength="18" placeholder="00.000.000/0000-00">
+          </div>
+
+          <div class="field full">
+            <label>TRANSPORTADORA</label>
+            <input id="transportadora" placeholder="Nome da transportadora">
+          </div>
+
+          <div class="field full">
+            <label>EMPRESA</label>
+            <input id="empresa" placeholder="Empresa">
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sectionTitle"><span class="dot"></span>FOTO DO MOTORISTA</div>
+        <div class="photoSection">
+          <div class="photoTop">
+            <div class="photoBox" id="photoBox">SEM FOTO</div>
+            <div class="photoMeta">
+              <p>Escolha uma imagem da galeria ou tire uma foto usando a câmera com guia.</p>
+              <div class="fileRow">
+                <input id="foto" type="file" accept="image/*">
+                <button class="ghost" type="button" onclick="removerFoto()">REMOVER</button>
+              </div>
+            </div>
+          </div>
+          <button class="photoButton" type="button" onclick="abrirCamera()">TIRAR FOTO</button>
+        </div>
+      </section>
+
+      <div class="formActions">
+        <button class="primary" type="submit">SALVAR CADASTRO</button>
+        <button class="ghost" type="button" onclick="fecharNovoCadastro()">CANCELAR</button>
+      </div>
+
+      <div class="formMsg" id="formMsg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- CÂMERA -->
+<div class="cameraModal" id="cameraModal">
+  <div class="cameraCard">
+    <div class="cameraHeader">
+      <h3>TIRAR FOTO</h3>
+      <p>Posicione a cabeça e os ombros dentro da guia.</p>
+    </div>
+
+    <div class="cameraView">
+      <video id="cameraVideo" autoplay playsinline muted></video>
+      <canvas id="captureCanvas"></canvas>
+
+      <div class="guideOverlay">
+        <div class="headGuide">
+          <div class="head"></div>
+          <div class="shoulders"></div>
+        </div>
+        <div class="guideText">ENQUADRE A CABEÇA E OS OMBROS</div>
+      </div>
+    </div>
+
+    <div class="cameraActions">
+      <button class="primary" type="button" onclick="capturarFoto()">CAPTURAR FOTO</button>
+      <button class="ghost" type="button" onclick="fecharCamera()">CANCELAR</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY="ficha_cadastro_motorista_v3";
+let fotoBase64="";
+let cameraStream=null;
+
+function obterCadastros(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+  }catch{
+    return [];
+  }
+}
+
+function abrirNovoCadastro(){
+  limparFormulario();
+  document.getElementById("formModal").classList.add("open");
+  document.body.style.overflow="hidden";
+  setTimeout(()=>document.getElementById("nome").focus(),120);
+}
+
+function fecharNovoCadastro(){
+  fecharCamera();
+  document.getElementById("formModal").classList.remove("open");
+  document.body.style.overflow="";
+}
+
+document.getElementById("formModal").addEventListener("click",e=>{
+  if(e.target===e.currentTarget) fecharNovoCadastro();
+});
+
+document.getElementById("foto").addEventListener("change",e=>{
+  const file=e.target.files&&e.target.files[0];
+  if(!file)return;
+
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    fotoBase64=ev.target.result;
+    mostrarFoto(fotoBase64);
+  };
+  reader.readAsDataURL(file);
+});
+
+function limitarTelefone(el){
+  el.value=el.value.replace(/\D/g,"").slice(0,11);
+}
+
+function mostrarFoto(src){
+  document.getElementById("photoBox").innerHTML='<img src="'+src+'" alt="Foto do motorista">';
+}
+
+function removerFoto(){
+  fotoBase64="";
+  document.getElementById("foto").value="";
+  document.getElementById("photoBox").textContent="SEM FOTO";
+}
+
+function limparFormulario(){
+  document.getElementById("cadastroForm").reset();
+  document.getElementById("paisTelefone").value="55";
+  removerFoto();
+  document.getElementById("formMsg").style.display="none";
+}
+
+async function abrirCamera(){
+  const modal=document.getElementById("cameraModal");
+  const video=document.getElementById("cameraVideo");
+  const canvas=document.getElementById("captureCanvas");
+
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    alert("A câmera ao vivo precisa ser aberta por uma página HTTPS publicada.");
+    return;
+  }
+
+  try{
+    cameraStream=await navigator.mediaDevices.getUserMedia({
+      video:{
+        facingMode:"user",
+        width:{ideal:1280},
+        height:{ideal:960}
+      },
+      audio:false
+    });
+
+    video.srcObject=cameraStream;
+    canvas.style.display="none";
+    video.style.display="block";
+    modal.style.display="flex";
+  }catch(err){
+    alert("Para tirar a foto, permita o acesso à câmera quando o navegador solicitar.");
+  }
+}
+
+function pararCamera(){
+  if(cameraStream){
+    cameraStream.getTracks().forEach(t=>t.stop());
+    cameraStream=null;
+  }
+}
+
+function fecharCamera(){
+  pararCamera();
+  document.getElementById("cameraModal").style.display="none";
+}
+
+function capturarFoto(){
+  const video=document.getElementById("cameraVideo");
+  const canvas=document.getElementById("captureCanvas");
+
+  if(!video.videoWidth){
+    alert("A câmera ainda está carregando.");
+    return;
+  }
+
+  canvas.width=video.videoWidth;
+  canvas.height=video.videoHeight;
+
+  const ctx=canvas.getContext("2d");
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+  fotoBase64=canvas.toDataURL("image/jpeg",0.9);
+  mostrarFoto(fotoBase64);
+  fecharCamera();
+}
+
+document.getElementById("cadastroForm").addEventListener("submit",e=>{
+  e.preventDefault();
+
+  const numero=document.getElementById("telefone").value.replace(/\D/g,"").slice(0,11);
+  const pais=document.getElementById("paisTelefone").value;
+
+  const registro={
+    id:Date.now(),
+    nome:document.getElementById("nome").value.trim().toUpperCase(),
+    cpf:document.getElementById("cpf").value.trim(),
+    rg:document.getElementById("rg").value.trim(),
+    dataNascimento:document.getElementById("dataNascimento").value,
+    telefonePais:pais,
+    telefoneNumero:numero,
+    telefone:numero?`(+${pais}) ${numero}`:"",
+    email:document.getElementById("email").value.trim(),
+    cep:document.getElementById("cep").value.trim(),
+    placa:document.getElementById("placa").value.trim().toUpperCase(),
+    transportadora:document.getElementById("transportadora").value.trim().toUpperCase(),
+    cnpj:document.getElementById("cnpj").value.trim(),
+    empresa:document.getElementById("empresa").value.trim().toUpperCase(),
+    foto:fotoBase64
+  };
+
+  const lista=obterCadastros();
+  lista.unshift(registro);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(lista));
+
+  renderCadastros();
+  fecharNovoCadastro();
+});
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+}
+
+function formatarDataNascimento(v){
+  if(!v)return "—";
+  const p=v.split("-");
+  return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:v;
+}
+
+function renderCadastros(){
+  const lista=obterCadastros();
+  const q=(document.getElementById("buscaCadastro").value||"").trim().toLowerCase();
+
+  const filtrados=lista.filter(r=>
+    `${r.nome||""} ${r.cpf||""} ${r.placa||""} ${r.telefone||""}`.toLowerCase().includes(q)
+  );
+
+  document.getElementById("savedCount").textContent=
+    `${lista.length} ${lista.length===1?"REGISTRO":"REGISTROS"}`;
+
+  const el=document.getElementById("savedList");
+
+  if(!filtrados.length){
+    el.innerHTML=lista.length
+      ? '<div class="empty"><strong>NENHUM RESULTADO</strong>Tente pesquisar por outro nome, CPF ou placa.</div>'
+      : '<div class="empty"><strong>NENHUM CADASTRO AINDA</strong>Toque em + NOVO CADASTRO para adicionar o primeiro motorista.</div>';
+    return;
+  }
+
+  el.innerHTML=filtrados.map(r=>`
+    <div class="savedItem" onclick="this.classList.toggle('open')">
+      <div class="savedSummary">
+        <div>
+          <div class="savedName">${esc(r.nome||"SEM NOME")}</div>
+          <div class="savedSmall">${esc(r.cpf||"CPF NÃO INFORMADO")}</div>
+        </div>
+
+        <div class="phoneCol savedSmall">
+          ${esc(r.telefone||((r.telefonePais&&r.telefoneNumero)?`(+${r.telefonePais}) ${r.telefoneNumero}`:"SEM TELEFONE"))}
+        </div>
+
+        <div class="dateCol savedSmall">
+          ${esc(formatarDataNascimento(r.dataNascimento))}
+        </div>
+
+        <div class="plateCol savedPlate">
+          ${esc(r.placa||"—")}
+        </div>
+      </div>
+
+      <div class="savedDetails">
+        <b>RG:</b> ${esc(r.rg||"—")}<br>
+        <b>DATA DE NASCIMENTO:</b> ${esc(formatarDataNascimento(r.dataNascimento))}<br>
+        <b>TELEFONE / WHATSAPP:</b> ${esc(r.telefone||"—")}<br>
+        <b>E-MAIL:</b> ${esc(r.email||"—")}<br>
+        <b>CEP:</b> ${esc(r.cep||"—")}<br>
+        <b>TRANSPORTADORA:</b> ${esc(r.transportadora||"—")}<br>
+        <b>CNPJ:</b> ${esc(r.cnpj||"—")}<br>
+        <b>EMPRESA:</b> ${esc(r.empresa||"—")}
+
+        <div class="savedActions">
+          <button class="printBtn" type="button" onclick="event.stopPropagation(); imprimirCadastro(${r.id},'print')">IMPRIMIR</button>
+          <button class="pdfBtn" type="button" onclick="event.stopPropagation(); imprimirCadastro(${r.id},'pdf')">SALVAR PDF</button>
+          <button class="deleteBtn" type="button" onclick="event.stopPropagation(); eliminarCadastro(${r.id})">ELIMINAR</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function eliminarCadastro(id){
+  const lista=obterCadastros();
+  const registro=lista.find(x=>Number(x.id)===Number(id));
+
+  if(!registro){
+    alert("Cadastro não encontrado.");
+    return;
+  }
+
+  if(!confirm(`Tem certeza que deseja eliminar o cadastro de ${registro.nome||"este motorista"}?`)){
+    return;
+  }
+
+  const novaLista=lista.filter(x=>Number(x.id)!==Number(id));
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(novaLista));
+  renderCadastros();
+}
+
+function imprimirCadastro(id,modo){
+  const r=obterCadastros().find(x=>Number(x.id)===Number(id));
+  if(!r){
+    alert("Cadastro não encontrado.");
+    return;
+  }
+
+  const foto=r.foto
+    ? `<img src="${r.foto}" alt="Foto do motorista" style="width:150px;height:180px;object-fit:cover;border:1px solid #bbb;border-radius:8px">`
+    : `<div style="width:150px;height:180px;border:1px solid #bbb;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#777;font-size:12px">SEM FOTO</div>`;
+
+  const telefone=r.telefone||((r.telefonePais&&r.telefoneNumero)?`(+${r.telefonePais}) ${r.telefoneNumero}`:"—");
+  const dataNascimento=formatarDataNascimento(r.dataNascimento);
+
+  const w=window.open("","_blank");
+  if(!w){
+    alert("O navegador bloqueou a janela de impressão. Permita pop-ups para este site.");
+    return;
+  }
+
+  w.document.write(`
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CADASTRO - ${esc(r.nome||"MOTORISTA")}</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#17211b;background:#fff}
+.page{width:210mm;min-height:297mm;margin:auto;padding:16mm}
+h1{font-size:22px;margin:0;color:#0f5f2a}
+.sub{font-size:12px;color:#6f7b74;margin:5px 0 22px}
+.top{display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:start;margin-bottom:22px}
+.section{margin-top:18px}
+.section h2{font-size:13px;color:#0f5f2a;border-bottom:2px solid #16833a;padding-bottom:6px;margin:0 0 10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px}
+.item{border-bottom:1px solid #d8e0da;padding:7px 0}
+.label{font-size:10px;font-weight:700;color:#6f7b74}
+.value{font-size:13px;font-weight:700;margin-top:3px;word-break:break-word}
+.footer{margin-top:28px;font-size:10px;color:#777;text-align:center}
+@media print{
+  .page{width:auto;min-height:auto;margin:0;padding:10mm}
+  @page{size:A4;margin:0}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>FICHA DE CADASTRO DE MOTORISTA</h1>
+  <div class="sub">CADASTRO INDIVIDUAL DO MOTORISTA</div>
+
+  <div class="top">
+    <div>${foto}</div>
+    <div>
+      <div class="item"><div class="label">NOME DO MOTORISTA</div><div class="value">${esc(r.nome||"—")}</div></div>
+      <div class="item"><div class="label">CPF</div><div class="value">${esc(r.cpf||"—")}</div></div>
+      <div class="item"><div class="label">RG</div><div class="value">${esc(r.rg||"—")}</div></div>
+      <div class="item"><div class="label">DATA DE NASCIMENTO</div><div class="value">${esc(dataNascimento)}</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>CONTATO</h2>
+    <div class="grid">
+      <div class="item"><div class="label">TELEFONE / WHATSAPP</div><div class="value">${esc(telefone)}</div></div>
+      <div class="item"><div class="label">E-MAIL</div><div class="value">${esc(r.email||"—")}</div></div>
+      <div class="item"><div class="label">CEP</div><div class="value">${esc(r.cep||"—")}</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>VEÍCULO E EMPRESA</h2>
+    <div class="grid">
+      <div class="item"><div class="label">PLACA DO VEÍCULO</div><div class="value">${esc(r.placa||"—")}</div></div>
+      <div class="item"><div class="label">TRANSPORTADORA</div><div class="value">${esc(r.transportadora||"—")}</div></div>
+      <div class="item"><div class="label">CNPJ</div><div class="value">${esc(r.cnpj||"—")}</div></div>
+      <div class="item"><div class="label">EMPRESA</div><div class="value">${esc(r.empresa||"—")}</div></div>
+    </div>
+  </div>
+
+  <div class="footer">FICHA DE CADASTRO DE MOTORISTA</div>
+</div>
+<script>
+window.onload=function(){
+  setTimeout(function(){window.print()},250);
+};
+<\/script>
+</body>
+</html>`);
+
+  w.document.close();
+}
+
+function maskCPF(v){
+  v=v.replace(/\D/g,"").slice(0,11);
+  v=v.replace(/(\d{3})(\d)/,"$1.$2");
+  v=v.replace(/(\d{3})(\d)/,"$1.$2");
+  v=v.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+  return v;
+}
+
+function maskCEP(v){
+  v=v.replace(/\D/g,"").slice(0,8);
+  return v.replace(/(\d{5})(\d)/,"$1-$2");
+}
+
+function maskCNPJ(v){
+  v=v.replace(/\D/g,"").slice(0,14);
+  v=v.replace(/(\d{2})(\d)/,"$1.$2");
+  v=v.replace(/(\d{3})(\d)/,"$1.$2");
+  v=v.replace(/(\d{3})(\d)/,"$1/$2");
+  v=v.replace(/(\d{4})(\d{1,2})$/,"$1-$2");
+  return v;
+}
+
+document.getElementById("cpf").addEventListener("input",e=>e.target.value=maskCPF(e.target.value));
+document.getElementById("cep").addEventListener("input",e=>e.target.value=maskCEP(e.target.value));
+document.getElementById("cnpj").addEventListener("input",e=>e.target.value=maskCNPJ(e.target.value));
+
+window.addEventListener("beforeunload",pararCamera);
+
+renderCadastros();
+</script>
+</body>
+</html>
