@@ -124,14 +124,55 @@ input:focus,select:focus{
 .savedSummary{
   padding:13px;
   display:grid;
-  grid-template-columns:1.6fr 1fr .8fr auto;
-  gap:12px;
+  grid-template-columns:86px minmax(0,1fr) auto;
+  gap:13px;
   align-items:center;
   cursor:pointer;
 }
-.savedName{font-weight:900;font-size:13px}
-.savedSmall{font-size:11px;color:var(--muted)}
-.savedPlate{font-weight:900;font-size:12px}
+.savedThumb{
+  width:86px;
+  height:104px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:900;
+  text-align:center;
+}
+.savedThumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.savedMain{
+  min-width:0;
+  display:grid;
+  gap:3px;
+}
+.savedName{
+  font-weight:900;
+  font-size:13px;
+  line-height:1.25;
+}
+.savedSmall{
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+.savedPlate{
+  align-self:start;
+  font-weight:900;
+  font-size:12px;
+  white-space:nowrap;
+  padding-top:2px;
+}
 .savedDetails{
   display:none;
   padding:12px 13px 13px;
@@ -443,10 +484,19 @@ button{
   .cardHead{padding:15px 14px}
   .toolbar{padding:12px 14px}
   .savedList{padding:12px 14px 16px}
-  .savedSummary{grid-template-columns:1fr auto;gap:4px 10px}
-  .savedSummary .phoneCol{grid-column:1}
-  .savedSummary .dateCol{grid-column:1}
-  .savedSummary .plateCol{grid-column:2;grid-row:1}
+  .savedSummary{
+    grid-template-columns:78px minmax(0,1fr) auto;
+    gap:10px;
+    align-items:start;
+  }
+  .savedThumb{
+    width:78px;
+    height:96px;
+    border-radius:10px;
+  }
+  .savedName{font-size:12px}
+  .savedSmall{font-size:10.5px}
+  .savedPlate{font-size:11px}
   .savedActions button{flex:1;min-width:0}
   .formModal{padding:0}
   .formCard{min-height:100%;border-radius:0;margin:0}
@@ -946,20 +996,20 @@ function renderCadastros(){
   el.innerHTML=filtrados.map(r=>`
     <div class="savedItem" onclick="this.classList.toggle('open')">
       <div class="savedSummary">
-        <div>
+        <div class="savedThumb">
+          ${r.foto_url
+            ? `<img src="${r.foto_url}" alt="Foto de ${esc(r.nome||"motorista")}">`
+            : `SEM FOTO`}
+        </div>
+
+        <div class="savedMain">
           <div class="savedName">${esc(r.nome||"SEM NOME")}</div>
           <div class="savedSmall">${esc(r.cpf||"CPF NÃO INFORMADO")}</div>
+          <div class="savedSmall">${esc(telefoneCompleto(r)||"SEM TELEFONE")}</div>
+          <div class="savedSmall">${esc(formatarDataNascimento(r.data_nascimento))}</div>
         </div>
 
-        <div class="phoneCol savedSmall">
-          ${esc(telefoneCompleto(r)||"SEM TELEFONE")}
-        </div>
-
-        <div class="dateCol savedSmall">
-          ${esc(formatarDataNascimento(r.data_nascimento))}
-        </div>
-
-        <div class="plateCol savedPlate">
+        <div class="savedPlate">
           ${esc(r.placa||"—")}
         </div>
       </div>
