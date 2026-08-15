@@ -479,7 +479,7 @@ button{
   <div class="headerInner">
     <div class="brand">
       <h1>CADASTROS DE MOTORISTAS</h1>
-      <p>Consulta e gerenciamento de cadastros</p>
+      <p>Consulta e gerenciamento de cadastros • sincronizado com Supabase</p>
     </div>
     <button class="newBtn" type="button" onclick="abrirNovoCadastro()">+ NOVO CADASTRO</button>
   </div>
@@ -641,17 +641,61 @@ button{
   </div>
 </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const STORAGE_KEY="ficha_cadastro_motorista_v3";
+const SUPABASE_URL="https://esufnehcoznlpubqhcaf.supabase.co";
+const SUPABASE_KEY="sb_publishable_cVBRU6Xv9k48Q7K4ZHWw-w_ftrn5fQR";
+const STORAGE_BUCKET="fotos-motoristas";
+
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let cadastrosCache=[];
 let fotoBase64="";
+let fotoMime="image/jpeg";
 let cameraStream=null;
 
-function obterCadastros(){
-  try{
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
-  }catch{
-    return [];
+function telefoneCompleto(r){
+  return (r.telefone_pais&&r.telefone_numero)
+    ? `(+${r.telefone_pais}) ${r.telefone_numero}`
+    : "";
+}
+
+async function carregarCadastros(){
+  const el=document.getElementById("savedList");
+  el.innerHTML='<div class="empty"><strong>CARREGANDO...</strong>Buscando os cadastros no servidor.</div>';
+
+  const {data,error}=await supabaseClient
+    .from("motoristas")
+    .select("*")
+    .order("criado_em",{ascending:false});
+
+  if(error){
+    console.error(error);
+    el.innerHTML='<div class="empty"><strong>ERRO AO CARREGAR</strong>Não foi possível buscar os cadastros no Supabase. Verifique a internet e tente novamente.</div>';
+    return;
   }
+
+  cadastrosCache=await Promise.all((data||[]).map(async r=>{
+    let foto_url="";
+    if(r.foto_path){
+      const {data:signed,error:signedError}=await supabaseClient
+        .storage
+        .from(STORAGE_BUCKET)
+        .createSignedUrl(r.foto_path,60*60);
+
+      if(!signedError&&signed?.signedUrl){
+        foto_url=signed.signedUrl;
+      }
+    }
+    return {...r,foto_url};
+  }));
+
+  renderCadastros();
+}
+
+function obterCadastros(){
+  return cadastrosCache;
 }
 
 function abrirNovoCadastro(){
@@ -675,6 +719,7 @@ document.getElementById("foto").addEventListener("change",e=>{
   const file=e.target.files&&e.target.files[0];
   if(!file)return;
 
+  fotoMime=file.type||"image/jpeg";
   const reader=new FileReader();
   reader.onload=ev=>{
     fotoBase64=ev.target.result;
@@ -693,6 +738,7 @@ function mostrarFoto(src){
 
 function removerFoto(){
   fotoBase64="";
+  fotoMime="image/jpeg";
   document.getElementById("foto").value="";
   document.getElementById("photoBox").textContent="SEM FOTO";
 }
@@ -729,6 +775,7 @@ async function abrirCamera(){
     video.style.display="block";
     modal.style.display="flex";
   }catch(err){
+    console.error(err);
     alert("Para tirar a foto, permita o acesso à câmera quando o navegador solicitar.");
   }
 }
@@ -760,41 +807,108 @@ function capturarFoto(){
   const ctx=canvas.getContext("2d");
   ctx.drawImage(video,0,0,canvas.width,canvas.height);
 
-  fotoBase64=canvas.toDataURL("image/jpeg",0.9);
+  fotoMime="image/jpeg";
+  fotoBase64=canvas.toDataURL("image/jpeg",0.88);
   mostrarFoto(fotoBase64);
   fecharCamera();
 }
 
-document.getElementById("cadastroForm").addEventListener("submit",e=>{
+function dataURLParaBlob(dataURL){
+  const partes=dataURL.split(",");
+  const mimeMatch=partes[0].match(/data:(.*?);base64/);
+  const mime=mimeMatch?mimeMatch[1]:"image/jpeg";
+  const bin=atob(partes[1]);
+  const bytes=new Uint8Array(bin.length);
+
+  for(let i=0;i<bin.length;i++){
+    bytes[i]=bin.charCodeAt(i);
+  }
+
+  return new Blob([bytes],{type:mime});
+}
+
+function extensaoDaImagem(mime){
+  if(mime==="image/png")return"png";
+  if(mime==="image/webp")return"webp";
+  return"jpg";
+}
+
+document.getElementById("cadastroForm").addEventListener("submit",async e=>{
   e.preventDefault();
+
+  const botao=e.submitter;
+  if(botao){
+    botao.disabled=true;
+    botao.textContent="SALVANDO...";
+  }
 
   const numero=document.getElementById("telefone").value.replace(/\D/g,"").slice(0,11);
   const pais=document.getElementById("paisTelefone").value;
+  let fotoPath=null;
 
-  const registro={
-    id:Date.now(),
-    nome:document.getElementById("nome").value.trim().toUpperCase(),
-    cpf:document.getElementById("cpf").value.trim(),
-    rg:document.getElementById("rg").value.trim(),
-    dataNascimento:document.getElementById("dataNascimento").value,
-    telefonePais:pais,
-    telefoneNumero:numero,
-    telefone:numero?`(+${pais}) ${numero}`:"",
-    email:document.getElementById("email").value.trim(),
-    cep:document.getElementById("cep").value.trim(),
-    placa:document.getElementById("placa").value.trim().toUpperCase(),
-    transportadora:document.getElementById("transportadora").value.trim().toUpperCase(),
-    cnpj:document.getElementById("cnpj").value.trim(),
-    empresa:document.getElementById("empresa").value.trim().toUpperCase(),
-    foto:fotoBase64
-  };
+  try{
+    if(fotoBase64){
+      const blob=dataURLParaBlob(fotoBase64);
+      const mime=blob.type||fotoMime||"image/jpeg";
+      const ext=extensaoDaImagem(mime);
+      const uid=crypto.randomUUID
+        ? crypto.randomUUID()
+        : Date.now()+"-"+Math.random().toString(16).slice(2);
 
-  const lista=obterCadastros();
-  lista.unshift(registro);
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(lista));
+      fotoPath=`motoristas/${Date.now()}-${uid}.${ext}`;
 
-  renderCadastros();
-  fecharNovoCadastro();
+      const {error:uploadError}=await supabaseClient
+        .storage
+        .from(STORAGE_BUCKET)
+        .upload(fotoPath,blob,{
+          contentType:mime,
+          upsert:false
+        });
+
+      if(uploadError)throw uploadError;
+    }
+
+    const registro={
+      nome:document.getElementById("nome").value.trim().toUpperCase(),
+      cpf:document.getElementById("cpf").value.trim(),
+      rg:document.getElementById("rg").value.trim()||null,
+      data_nascimento:document.getElementById("dataNascimento").value||null,
+      telefone_pais:pais,
+      telefone_numero:numero||null,
+      email:document.getElementById("email").value.trim()||null,
+      cep:document.getElementById("cep").value.trim()||null,
+      placa:document.getElementById("placa").value.trim().toUpperCase()||null,
+      transportadora:document.getElementById("transportadora").value.trim().toUpperCase()||null,
+      cnpj:document.getElementById("cnpj").value.trim()||null,
+      empresa:document.getElementById("empresa").value.trim().toUpperCase()||null,
+      foto_path:fotoPath
+    };
+
+    const {error}=await supabaseClient
+      .from("motoristas")
+      .insert(registro);
+
+    if(error){
+      if(fotoPath){
+        await supabaseClient.storage.from(STORAGE_BUCKET).remove([fotoPath]);
+      }
+      throw error;
+    }
+
+    await carregarCadastros();
+    fecharNovoCadastro();
+
+  }catch(err){
+    console.error(err);
+    const msg=document.getElementById("formMsg");
+    msg.textContent="ERRO AO SALVAR O CADASTRO. VERIFIQUE A CONEXÃO E TENTE NOVAMENTE.";
+    msg.style.display="block";
+  }finally{
+    if(botao){
+      botao.disabled=false;
+      botao.textContent="SALVAR CADASTRO";
+    }
+  }
 });
 
 function esc(v){
@@ -808,7 +922,7 @@ function esc(v){
 }
 
 function formatarDataNascimento(v){
-  if(!v)return "—";
+  if(!v)return"—";
   const p=v.split("-");
   return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:v;
 }
@@ -818,7 +932,9 @@ function renderCadastros(){
   const q=(document.getElementById("buscaCadastro").value||"").trim().toLowerCase();
 
   const filtrados=lista.filter(r=>
-    `${r.nome||""} ${r.cpf||""} ${r.placa||""} ${r.telefone||""}`.toLowerCase().includes(q)
+    `${r.nome||""} ${r.cpf||""} ${r.placa||""} ${r.telefone_pais||""} ${r.telefone_numero||""}`
+      .toLowerCase()
+      .includes(q)
   );
 
   document.getElementById("savedCount").textContent=
@@ -842,11 +958,11 @@ function renderCadastros(){
         </div>
 
         <div class="phoneCol savedSmall">
-          ${esc(r.telefone||((r.telefonePais&&r.telefoneNumero)?`(+${r.telefonePais}) ${r.telefoneNumero}`:"SEM TELEFONE"))}
+          ${esc(telefoneCompleto(r)||"SEM TELEFONE")}
         </div>
 
         <div class="dateCol savedSmall">
-          ${esc(formatarDataNascimento(r.dataNascimento))}
+          ${esc(formatarDataNascimento(r.data_nascimento))}
         </div>
 
         <div class="plateCol savedPlate">
@@ -856,8 +972,8 @@ function renderCadastros(){
 
       <div class="savedDetails">
         <b>RG:</b> ${esc(r.rg||"—")}<br>
-        <b>DATA DE NASCIMENTO:</b> ${esc(formatarDataNascimento(r.dataNascimento))}<br>
-        <b>TELEFONE / WHATSAPP:</b> ${esc(r.telefone||"—")}<br>
+        <b>DATA DE NASCIMENTO:</b> ${esc(formatarDataNascimento(r.data_nascimento))}<br>
+        <b>TELEFONE / WHATSAPP:</b> ${esc(telefoneCompleto(r)||"—")}<br>
         <b>E-MAIL:</b> ${esc(r.email||"—")}<br>
         <b>CEP:</b> ${esc(r.cep||"—")}<br>
         <b>TRANSPORTADORA:</b> ${esc(r.transportadora||"—")}<br>
@@ -874,9 +990,8 @@ function renderCadastros(){
   `).join("");
 }
 
-function eliminarCadastro(id){
-  const lista=obterCadastros();
-  const registro=lista.find(x=>Number(x.id)===Number(id));
+async function eliminarCadastro(id){
+  const registro=obterCadastros().find(x=>Number(x.id)===Number(id));
 
   if(!registro){
     alert("Cadastro não encontrado.");
@@ -887,24 +1002,45 @@ function eliminarCadastro(id){
     return;
   }
 
-  const novaLista=lista.filter(x=>Number(x.id)!==Number(id));
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(novaLista));
-  renderCadastros();
+  try{
+    if(registro.foto_path){
+      const {error:fotoError}=await supabaseClient
+        .storage
+        .from(STORAGE_BUCKET)
+        .remove([registro.foto_path]);
+
+      if(fotoError)throw fotoError;
+    }
+
+    const {error}=await supabaseClient
+      .from("motoristas")
+      .delete()
+      .eq("id",id);
+
+    if(error)throw error;
+
+    await carregarCadastros();
+
+  }catch(err){
+    console.error(err);
+    alert("Não foi possível eliminar o cadastro. Tente novamente.");
+  }
 }
 
 function imprimirCadastro(id,modo){
   const r=obterCadastros().find(x=>Number(x.id)===Number(id));
+
   if(!r){
     alert("Cadastro não encontrado.");
     return;
   }
 
-  const foto=r.foto
-    ? `<img src="${r.foto}" alt="Foto do motorista" style="width:150px;height:180px;object-fit:cover;border:1px solid #bbb;border-radius:8px">`
+  const foto=r.foto_url
+    ? `<img src="${r.foto_url}" alt="Foto do motorista" style="width:150px;height:180px;object-fit:cover;border:1px solid #bbb;border-radius:8px">`
     : `<div style="width:150px;height:180px;border:1px solid #bbb;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#777;font-size:12px">SEM FOTO</div>`;
 
-  const telefone=r.telefone||((r.telefonePais&&r.telefoneNumero)?`(+${r.telefonePais}) ${r.telefoneNumero}`:"—");
-  const dataNascimento=formatarDataNascimento(r.dataNascimento);
+  const telefone=telefoneCompleto(r)||"—";
+  const dataNascimento=formatarDataNascimento(r.data_nascimento);
 
   const w=window.open("","_blank");
   if(!w){
@@ -977,7 +1113,7 @@ h1{font-size:22px;margin:0;color:#0f5f2a}
 </div>
 <script>
 window.onload=function(){
-  setTimeout(function(){window.print()},250);
+  setTimeout(function(){window.print()},300);
 };
 <\/script>
 </body>
@@ -1014,7 +1150,7 @@ document.getElementById("cnpj").addEventListener("input",e=>e.target.value=maskC
 
 window.addEventListener("beforeunload",pararCamera);
 
-renderCadastros();
+carregarCadastros();
 </script>
 </body>
 </html>
