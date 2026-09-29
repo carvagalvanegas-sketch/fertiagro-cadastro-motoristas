@@ -134,8 +134,6 @@ td{border-top:1px solid #e7eee9;padding:10px;font-size:12px;}
 @media(max-width:760px){.request-grid{grid-template-columns:1fr}.request-meta{grid-template-columns:1fr}.request-head{flex-direction:column}.account-pill{gap:5px}.account-pill .role{display:none}}
 /* Interface e autenticação compartilhadas */
 body,button,input,select,textarea{text-transform:none}
-/* Títulos sempre em MAIÚSCULAS */
-h1,h2,h3,h4,h5,h6,.page>h2,.card h3,.form h3,.auth-form h2,.auth-intro h2,.request-title,.ferti-title h1,.ferti-title p,.section-title,.eyebrow,.activeCard b,.record b{ text-transform:uppercase; }
 #authStatus:empty{display:none}
 body{font-family:Inter,"Segoe UI",Arial,sans-serif}
 button{transition:background .15s,box-shadow .15s}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #60a5fa;outline-offset:3px}
@@ -151,14 +149,7 @@ main{max-width:1440px;margin:auto}.page>h2{margin-top:4px}
 body:not([data-role="admin"]) .admin-only{display:none!important}.request-card.pending{border-left-color:#b7791f}.local-label{font-size:10px;color:#826526}#publishedUrl{margin:8px 0 12px;text-transform:none}#printQrSheet{display:none}.print-qr-card{text-align:center}.print-qr-card #qrPrint{display:flex;justify-content:center}#visitState{margin-top:10px}#listaAtivos{margin-top:14px}.qrBox{max-width:540px}.qr img,.qr canvas{max-width:100%;height:auto}
 @media(max-width:760px){.auth-shell{grid-template-columns:1fr;gap:22px;margin:22px auto;padding:0 16px}.auth-intro h2{font-size:30px;margin:10px 0}.auth-intro p{font-size:13px;margin-bottom:0}.auth-features,.auth-intro small{display:none}.auth-panel{padding:22px}.ferti-title h1{font-size:14px}.ferti-logo{width:90px}.ferti-title p{font-size:9px}nav.tabs{flex-wrap:nowrap;overflow:auto;padding:8px}nav.tabs button.tab{flex:none;white-space:nowrap}.account-pill .btn-account{font-size:9px;padding:8px}.actions{flex-wrap:wrap}.auth-footnote{margin-top:18px}}
 @media print{body>*{display:none!important}body>#printQrSheet{display:flex!important;justify-content:center;align-items:center;min-height:250mm}.print-qr-card h2{font-size:22pt}.print-qr-card p{font-size:12pt}@page{size:A4;margin:15mm}}
-
-/* MAIÚSCULAS EM TODA A INTERFACE */
-html, body, body *, button, input, select, textarea, option {
-  text-transform: uppercase !important;
-}
-input::placeholder, textarea::placeholder {
-  text-transform: uppercase !important;
-}
+.subtabs{display:flex;gap:8px;flex-wrap:wrap;padding:8px 0 14px}.subtabs.hidden{display:none}.subtab{font-size:12px}.main-tabs{margin-bottom:0}.main-tab{font-weight:900}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script></head>
@@ -175,19 +166,32 @@ input::placeholder, textarea::placeholder {
   </div>
 </section>
 <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-<div id="application" class="hidden"><nav class="tabs">
-<button type="button" class="tab active" data-page="inicio">INÍCIO</button>
-<button type="button" class="tab" data-page="colaborador">👤 COLABORADOR</button>
-<button type="button" class="tab" data-page="veiculo">🚗 VEÍCULO</button>
-<button type="button" class="tab" data-page="consulta">🔎 CONSULTAR PLACA</button>
-<button type="button" class="tab" data-page="acessos">🚪 ACESSOS</button>
-<button type="button" class="tab" data-page="solicitar">📝 SOLICITAR ACESSO</button>
-<button type="button" class="tab" data-page="solicitacoes">🔐 SOLICITAÇÕES <span id="pendingBadge" class="dot-new hidden">0</span></button>
-<button type="button" class="tab" data-page="entrada">Nova visita</button><button type="button" class="tab" data-page="ativos">Visitantes ativos</button><button type="button" class="tab" data-page="historico">Histórico de visitas</button><button type="button" class="tab" data-page="qr">QR de entrada</button><button type="button" class="tab" data-page="conta">👤 CONTA</button>
+<div id="application" class="hidden"><nav class="tabs main-tabs">
+<button type="button" class="tab active main-tab" data-menu="inicio">INÍCIO</button>
+<button type="button" class="tab main-tab" data-menu="acessos">🚪 ACESSOS</button>
+<button type="button" class="tab main-tab" data-menu="visita">📋 VISITA</button>
+<button type="button" class="tab main-tab" data-page="conta">👤 CONTA</button>
 </nav>
+<div id="subnav-inicio" class="subtabs">
+<button type="button" class="tab subtab" data-page="colaborador">👤 COLABORADOR</button>
+<button type="button" class="tab subtab" data-page="veiculo">🚗 VEÍCULO</button>
+<button type="button" class="tab subtab" data-page="consulta">🔎 CONSULTAR PLACA</button>
+</div>
+<div id="subnav-acessos" class="subtabs hidden">
+<button type="button" class="tab subtab" data-page="acessos">🚪 ACESSOS</button>
+<button type="button" class="tab subtab" data-page="solicitar" data-role="colaborador,admin">📝 SOLICITAR ACESSO</button>
+<button type="button" class="tab subtab" data-page="minhasSolicitacoes" data-role="colaborador,admin">📋 MINHAS SOLICITAÇÕES</button>
+<button type="button" class="tab subtab" data-page="solicitacoes">🔐 SOLICITAÇÕES <span id="pendingBadge" class="dot-new hidden">0</span></button>
+</div>
+<div id="subnav-visita" class="subtabs hidden">
+<button type="button" class="tab subtab" data-page="entrada">NOVA VISITA</button>
+<button type="button" class="tab subtab" data-page="ativos">VISITANTES ATIVOS</button>
+<button type="button" class="tab subtab" data-page="historico">HISTÓRICO DE VISITAS</button>
+<button type="button" class="tab subtab" data-page="qr">QR DE ENTRADA</button>
+</div>
 <main>
 <section id="inicio" class="page active">
-<h2>Painel integrado</h2><div id="systemState" class="notice" role="status"></div><div class="actions"><button class="btn primary" onclick="showPage('entrada')" data-staff>Registrar visitante</button><button class="btn secondary" onclick="showPage('solicitar')">Solicitar acesso</button><button class="btn secondary" onclick="enableNotifications()" data-staff>Ativar notificações</button></div><br><div class="cards">
+<h2>Painel integrado</h2><div id="systemState" class="notice" role="status"></div><div class="actions"><button class="btn primary" onclick="showPage('entrada')" data-staff>Registrar visitante</button><button class="btn secondary" onclick="showPage('solicitar')" data-role="colaborador,admin">Solicitar acesso</button><button class="btn secondary" onclick="enableNotifications()" data-staff>Ativar notificações</button></div><br><div class="cards">
 <div class="card">COLABORADORES<div class="number" id="countCol">0</div></div>
 <div class="card">VEÍCULOS CADASTRADOS<div class="number" id="countVeh">0</div></div>
 <div class="card">ACESSOS HOJE<div class="number" id="countAccess">0</div></div>
@@ -257,6 +261,12 @@ input::placeholder, textarea::placeholder {
 <div id="myRequests"></div>
 </section>
 
+<section id="minhasSolicitacoes" class="page hidden">
+<h2>Minhas solicitações</h2>
+<div class="notice">Acompanhe aqui se sua solicitação foi PENDENTE, AUTORIZADA, NEGADA ou UTILIZADA.</div>
+<div id="myRequestsStatus"></div>
+</section>
+
 <section id="solicitacoes" class="page hidden">
 <h2>Solicitações de acesso</h2>
 <div id="requestRoleRequired" class="locked hidden">Somente GERENTE, PORTARIA e ADMIN podem visualizar esta área.</div>
@@ -312,7 +322,9 @@ function isManager(){return ['gerente','admin'].includes(currentProfile?.role)}
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
   const p=document.getElementById(id); if(p)p.classList.remove('hidden');
-  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
+  document.querySelectorAll('.subtab').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
+  const activeSub=document.querySelector('.subtab[data-page=\"'+id+'\"]');
+  if(activeSub){ const sub=activeSub.closest('.subtabs'); document.querySelectorAll('.subtabs').forEach(x=>x.classList.add('hidden')); if(sub)sub.classList.remove('hidden'); const menu=sub?.id.replace('subnav-',''); document.querySelectorAll('.main-tab').forEach(x=>x.classList.toggle('active',x.dataset.menu===menu)); }
   if(id==='solicitacoes')loadRequests();
   if(id==='solicitar')loadMyRequests();
 }
@@ -329,7 +341,20 @@ function refresh(){
  updateUIForRole();
 }
 
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+document.querySelectorAll('.main-tab[data-menu]').forEach(b=>b.onclick=()=>{
+  const menu=b.dataset.menu;
+  document.querySelectorAll('.subtabs').forEach(x=>x.classList.add('hidden'));
+  const sub=document.getElementById('subnav-'+menu); if(sub)sub.classList.remove('hidden');
+  document.querySelectorAll('.main-tab').forEach(x=>x.classList.toggle('active',x===b));
+  const first=sub?.querySelector('.subtab:not(.hidden)');
+  if(first){ document.querySelectorAll('.subtab').forEach(x=>x.classList.remove('active')); first.classList.add('active'); showPage(first.dataset.page); }
+});
+document.querySelectorAll('.subtab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.subtab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  showPage(b.dataset.page);
+});
+
 
 document.getElementById('formCol').onsubmit=e=>{e.preventDefault();if(!requireStaff())return;let c=get(keyC);c.push({id:Date.now(),nome:cNome.value,cpf:cCpf.value,mat:cMat.value,setor:cSetor.value,cargo:cCargo.value,tel:cTel.value});set(keyC,c);e.target.reset();refresh();alert('COLABORADOR cadastrado com sucesso!')};
 document.getElementById('formVeh').onsubmit=e=>{e.preventDefault();if(!requireStaff())return;let c=get(keyC);if(!c.length){alert('Cadastre primeiro um colaborador.');return}let v=get(keyV);if(v.some(x=>normalizePlate(x.placa)===normalizePlate(vPlaca.value))){alert('Placa já cadastrada.');return}v.push({id:Date.now(),placa:normalizePlate(vPlaca.value),tipo:vTipo.value,marca:vMarca.value,modelo:vModelo.value,cor:vCor.value,ano:vAno.value,colaborador:vCol.value,status:vStatus.value});set(keyV,v);e.target.reset();refresh();alert('VEÍCULO cadastrado com sucesso!')};
@@ -432,6 +457,13 @@ async function loadMyRequests(){
  if(error){document.getElementById('myRequests').innerHTML=`<div class="error">${esc(error.message)}</div>`;return}
  document.getElementById('myRequests').innerHTML='<h3>Minhas solicitações</h3>'+(data?.map(requestHTML).join('')||'<div class="empty">Nenhuma solicitação.</div>');
 }
+async function loadMyRequestsStatus(){
+ if(!currentUser)return;
+ const {data,error}=await sb.from('access_requests').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(20);
+ const el=document.getElementById('myRequestsStatus');
+ if(error){el.innerHTML=`<div class="error">${esc(error.message)}</div>`;return}
+ el.innerHTML=data?.length?data.map(x=>`<article class="request-card ${{PENDENTE:'pending',AUTORIZADA:'approved',NEGADA:'denied',UTILIZADA:'used',EXPIRADA:'expired'}[x.status]||'expired'}"><div class="request-head"><div><div class="request-title">${esc(x.motivo||'SOLICITAÇÃO DE ACESSO')}</div><div style="font-size:10px;color:var(--mut)">${formatDateBR(x.request_date)} · ENTRADA ${esc(x.entry_time||'—')}</div></div>${statusPill(x.status)}</div><div class="request-note"><b>STATUS:</b> ${esc(x.status)}${x.decision_note?`<br><b>OBSERVAÇÃO:</b> ${esc(x.decision_note)}`:''}</div></article>`).join(''):'<div class="empty">NENHUMA SOLICITAÇÃO ENCONTRADA.</div>';
+}
 async function loadRequests(){
  if(!isStaff()){updateUIForRole();return}const owner=currentUser.id;
  const {data,error}=await sb.from('access_requests').select('*').order('created_at',{ascending:false}).limit(100);
@@ -499,34 +531,48 @@ function startRealtime(){
 const $u=id=>document.getElementById(id);
 let authEpoch=0,sessionReady=false,recoveryMode=false,toastTimer,visitorPoll;
 const staffPages=new Set(['colaborador','veiculo','consulta','acessos','solicitacoes','entrada','ativos','historico','qr']);
+const rolePages={
+  colaborador:new Set(['inicio','solicitar','minhasSolicitacoes','conta']),
+  gerente:new Set(['inicio','colaborador','veiculo','consulta','acessos','solicitacoes','ativos','historico','conta']),
+  portaria:new Set(['inicio','colaborador','veiculo','consulta','acessos','solicitacoes','entrada','ativos','historico','qr','conta']),
+  admin:new Set(['inicio','colaborador','veiculo','consulta','acessos','solicitar','minhasSolicitacoes','solicitacoes','entrada','ativos','historico','qr','conta'])
+};
 const normalizePlate=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 const localDate=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
 function toast(message){$u('toast').textContent=message;$u('toast').classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$u('toast').classList.add('hidden'),6500)}
 function requireStaff(){if(!sessionReady||!isStaff()){toast('Entre com uma conta de portaria, gerente ou administrador.');return false}return true}
 function showPage(id){
  if(!currentUser||!sessionReady){authView('login');return}
- if(staffPages.has(id)&&!isStaff()){toast('Seu perfil não tem acesso a esta área.');id='solicitar'}
+ const role=currentProfile?.role||'colaborador';
+ const allowed=rolePages[role]||rolePages.colaborador;
+ if(!allowed.has(id)){toast('SEU PERFIL NÃO TEM ACESSO A ESTA ÁREA.');id=role==='colaborador'?'inicio':'inicio'}
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('hidden',p.id!==id));
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
  if(id==='solicitacoes')loadRequests().catch(reportError);
  if(id==='solicitar')loadMyRequests().catch(reportError);
+ if(id==='minhasSolicitacoes')loadMyRequestsStatus().catch(reportError);
  if(['entrada','ativos','historico'].includes(id))V.carregar();
  if(id==='qr')V.renderQR();
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function updateUIForRole(){
- const logged=!!currentUser,staff=sessionReady&&isStaff();
- document.body.dataset.role=currentProfile?.role||'';
+ const logged=!!currentUser,role=currentProfile?.role||'colaborador',staff=sessionReady&&isStaff();
+ const allowed=rolePages[role]||rolePages.colaborador;
+ document.body.dataset.role=role;
  $u('application').classList.toggle('hidden',!logged||!sessionReady||recoveryMode);
  $u('authScreen').classList.toggle('hidden',logged&&sessionReady&&!recoveryMode);
  $u('loginCard').classList.toggle('hidden',logged);$u('loggedCard').classList.toggle('hidden',!logged);
  $u('accountBtn').textContent=logged?'MINHA CONTA':'ENTRAR';
- $u('userRoleLabel').textContent=logged?(roleNames[currentProfile?.role]||'COLABORADOR'):'NÃO CONECTADO';
- $u('loggedName').textContent=currentProfile?.full_name||currentUser?.email||'CONTA';
- $u('loggedEmail').textContent=currentUser?.email||'';$u('loggedRole').textContent=roleNames[currentProfile?.role]||'COLABORADOR';
- document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('hidden',staffPages.has(b.dataset.page)&&!staff));
+ $u('userRoleLabel').textContent=logged?(roleNames[role]||'COLABORADOR'):'NÃO CONECTADO';
+ $u('loggedName').textContent=(currentProfile?.full_name||currentUser?.email||'CONTA').toUpperCase();
+ $u('loggedEmail').textContent=currentUser?.email||'';$u('loggedRole').textContent=roleNames[role]||'COLABORADOR';
+ document.querySelectorAll('nav button[data-page]').forEach(b=>b.classList.toggle('hidden',!allowed.has(b.dataset.page)));
+ document.querySelectorAll('[data-role]').forEach(e=>{
+   const roles=e.dataset.role.split(',').map(x=>x.trim());
+   e.classList.toggle('hidden',!logged||!roles.includes(role));
+ });
  document.querySelectorAll('[data-staff],#inicio .cards,#inicio > .notice:not(#systemState)').forEach(e=>e.classList.toggle('hidden',!staff));
- $u('formRequest').classList.toggle('hidden',!logged);$u('requestLoginRequired').classList.toggle('hidden',logged);
+ $u('formRequest').classList.toggle('hidden',!logged||!allowed.has('solicitar'));$u('requestLoginRequired').classList.toggle('hidden',logged);
  $u('requestRoleRequired').classList.toggle('hidden',staff);$u('requestToolbar').classList.toggle('hidden',!staff);$u('requestsList').classList.toggle('hidden',!staff);
  $u('pendingBadge').classList.toggle('hidden',!staff);
 }
