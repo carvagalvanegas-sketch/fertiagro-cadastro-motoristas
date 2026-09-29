@@ -193,6 +193,91 @@ body.app-open .ferti-title,body.app-open .ferti-logo{display:none}
  .page>h2{font-size:26px!important}.page .form,.page .panel,.page .card,.page .request-card{padding:18px!important}.page label{font-size:13px!important}.page input,.page select,.page textarea{font-size:16px!important;min-height:48px}.btn{font-size:14px!important;min-height:46px!important}.security-banner{margin-top:14px!important}.activity-panel{display:none!important}
 }
 @media(min-width:761px){.subtabs{flex-direction:row!important;align-items:center!important;flex-wrap:wrap!important}.subtab{width:auto!important}.subtabs:before{display:none!important}}
+
+/* ===== ANDROID FINAL — LAYOUT NATURAL E SEM CORTES ===== */
+@media (max-width:760px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden;}
+  #application{display:flex!important;flex-direction:column!important;width:100%;min-width:0;overflow-x:hidden;}
+  .dashboard-topbar{position:relative!important;top:auto!important;width:100%;box-sizing:border-box;height:70px;min-height:70px;padding:0 12px!important;}
+  .topbar-brand{min-width:0;flex:1;}
+  .brand-home img{width:66px!important;height:42px!important;object-fit:contain;}
+  .topbar-brand strong{font-size:16px!important;white-space:nowrap;}
+  .topbar-brand span{font-size:9px!important;white-space:nowrap;}
+  .topbar-actions{flex:none;gap:5px!important;}
+  .topbar-notify{font-size:23px!important;padding:7px!important;}
+  .topbar-user{padding:0!important;}
+  .topbar-user .avatar{width:42px!important;height:42px!important;}
+
+  /* Navegação principal: 4 opções cabem naturalmente na largura do Android */
+  .main-tabs{
+    position:relative!important;top:auto!important;z-index:40;
+    width:100%!important;box-sizing:border-box!important;
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;align-items:stretch!important;
+    padding:7px 7px 0!important;gap:5px!important;
+    overflow:visible!important;background:#003d2e!important;
+    border-radius:0!important;
+  }
+  .main-tabs .sidebar-brand{display:none!important;}
+  .main-tabs button.main-tab{
+    grid-row:auto!important;grid-column:auto!important;
+    width:100%!important;min-width:0!important;max-width:none!important;
+    box-sizing:border-box!important;
+    padding:12px 3px!important;margin:0!important;
+    min-height:52px!important;border-radius:10px 10px 0 0!important;
+    justify-content:center!important;text-align:center!important;
+    flex:none!important;font-size:12px!important;line-height:1.15!important;
+    white-space:normal!important;overflow:hidden!important;
+  }
+  .main-tabs button.main-tab span{display:inline!important;}
+  .main-tabs button[data-page="conta"]{margin:0!important;padding-top:12px!important;border-top:0!important;}
+
+  /* Cada conjunto de subpestañas ocupa uma linha inteira e fica VERTICAL */
+  .main-tabs .subtabs{
+    grid-column:1 / -1!important;
+    grid-row:auto!important;
+    width:100%!important;min-width:0!important;
+    box-sizing:border-box!important;
+    display:flex!important;flex-direction:column!important;
+    align-items:stretch!important;
+    gap:5px!important;padding:8px 8px 10px!important;
+    margin:0!important;background:#f0f6f3!important;
+    border-bottom:1px solid #d5e4dd!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+  .main-tabs .subtabs.hidden{display:none!important;}
+  .main-tabs .subtabs:before{
+    display:block!important;width:auto!important;
+    padding:2px 4px 4px!important;margin:0!important;
+    color:#174c3b!important;font-size:11px!important;font-weight:900!important;
+  }
+  .main-tabs .subtab{
+    display:flex!important;width:100%!important;min-width:0!important;
+    min-height:44px!important;box-sizing:border-box!important;
+    padding:10px 12px!important;margin:0!important;
+    border:1px solid #d7e5df!important;border-radius:9px!important;
+    background:#fff!important;color:#234b3c!important;
+    text-align:left!important;font-size:13px!important;font-weight:800!important;
+    line-height:1.2!important;white-space:normal!important;
+    overflow:visible!important;
+  }
+  .main-tabs .subtab.active{background:#078b59!important;color:#fff!important;border-color:#078b59!important;}
+  .main-tabs .subtab:before{content:'› '!important;color:#078b59!important;flex:none!important;}
+  .main-tabs .subtab.active:before{color:#fff!important;}
+
+  #application>main{width:100%!important;box-sizing:border-box!important;min-width:0!important;
+    padding:18px 12px 30px!important;margin:0!important;overflow:visible!important;}
+  .page{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;}
+  .page>h2{font-size:25px!important;line-height:1.15!important;overflow-wrap:anywhere;}
+  .card,.form,.panel,.request-card,.activeCard,.record{max-width:100%!important;box-sizing:border-box!important;}
+  .page input,.page select,.page textarea{max-width:100%!important;width:100%!important;box-sizing:border-box!important;font-size:16px!important;}
+  .btn{max-width:100%;box-sizing:border-box;}
+  footer{font-size:10px!important;text-align:center;padding:0 8px!important;}
+}
+@media (min-width:761px){
+  .main-tabs .subtabs{display:flex;flex-direction:column;}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script></head>
