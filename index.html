@@ -173,6 +173,26 @@ body.app-open>header.ferti-header{display:none}
 body.app-open .ferti-title,body.app-open .ferti-logo{display:none}
 @media(max-width:1050px){#application{grid-template-columns:230px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.activity-panel{display:none}.dashboard-menu-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar-brand span{display:none}}
 @media(max-width:760px){#application{display:block;min-height:100vh}.dashboard-topbar{height:66px;padding:0 14px;position:sticky;top:0}.topbar-brand strong{font-size:15px}.topbar-actions{gap:10px}.topbar-user>div:not(.avatar),.chevron{display:none}.main-tabs{position:sticky;top:66px;z-index:20;height:auto;display:flex!important;flex-direction:row!important;overflow-x:auto;padding:8px!important;gap:5px!important}.sidebar-brand{display:none}.main-tabs button.main-tab{width:auto!important;flex:0 0 auto!important;padding:10px 14px!important}.main-tabs button[data-page="conta"]{margin-top:0!important;border-top:0!important;padding-top:10px!important}.subtabs{position:sticky;top:115px;z-index:19;flex-direction:row!important;overflow-x:auto;padding:6px 10px!important;gap:4px!important}.subtabs:before{display:none}.subtab{white-space:nowrap;padding:9px 11px!important}.subtab:before{content:'• ';}.main-tabs~main{padding:20px 14px 30px!important}.dashboard-heading{align-items:flex-start;flex-direction:column}.dashboard-heading h2{font-size:25px}.dashboard-date{width:100%;box-sizing:border-box}.dashboard-menu-cards{grid-template-columns:1fr 1fr;gap:10px}.quick-card{min-height:170px;padding:14px}.quick-icon{width:54px;height:54px;font-size:21px}.quick-card strong{font-size:11px}.quick-card>b{font-size:24px}.quick-card>span:last-child{padding:7px 12px;font-size:9px}.search-card{grid-column:1/-1}.security-banner{min-height:90px;padding:16px}.security-banner>b{display:none}.security-banner strong{font-size:12px}.security-banner span{font-size:9px}.security-icon{width:42px;height:42px}.page>h2{font-size:23px!important}}
+
+/* ===== AJUSTES ANDROID / INTERFACE FINAL ===== */
+.brand-home{border:0;background:none;padding:0;margin:0;display:flex;align-items:center;cursor:pointer}.brand-home img{width:64px;height:42px;object-fit:contain;display:block}.topbar-user{border:0;background:transparent;cursor:pointer;padding:0;color:inherit}.topbar-user .avatar{overflow:hidden}.topbar-user .avatar img{width:100%;height:100%;object-fit:cover}.notification-wrap{position:relative}.topbar-notify{border:0;background:transparent;padding:7px;cursor:pointer;font-size:24px;position:relative;color:#174c3b}.notification-panel{position:absolute;right:0;top:48px;width:330px;background:#fff;border:1px solid #dbe7e1;border-radius:16px;box-shadow:0 18px 45px rgba(18,59,43,.18);z-index:1000;overflow:hidden}.notification-panel.hidden{display:none}.notification-panel-head{display:flex;align-items:center;justify-content:space-between;padding:15px 17px;border-bottom:1px solid #e8efeb;color:#173a2f;font-size:13px}.notification-panel-head button{border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:#6a7d74}.notification-list{max-height:330px;overflow:auto}.notification-item{display:flex;gap:10px;padding:13px 15px;border-bottom:1px solid #edf2ef;cursor:pointer}.notification-item:last-child{border-bottom:0}.notification-item .n-icon{width:34px;height:34px;border-radius:50%;background:#e4f4ec;display:grid;place-items:center;flex:none}.notification-item strong{display:block;font-size:11px;color:#173a2f}.notification-item span{display:block;font-size:10px;color:#6a7d74;margin-top:3px;line-height:1.35}.notification-empty{padding:25px 18px;text-align:center;font-size:11px;color:#70837a}.notify-dot:empty{display:none}
+@media(max-width:760px){
+ body{font-size:16px!important;overflow-x:hidden}
+ #application{display:flex!important;flex-direction:column;min-height:100vh}
+ .dashboard-topbar{position:sticky;top:0;height:72px;min-height:72px;padding:0 12px;z-index:50}
+ .brand-home img{width:72px;height:48px}.topbar-brand{gap:9px}.topbar-brand strong{font-size:17px}.topbar-brand span{display:block!important;font-size:9px;letter-spacing:.2px}.topbar-actions{gap:7px}.topbar-notify{font-size:23px;padding:6px}.topbar-user{gap:5px}.topbar-user-info{display:none!important}.topbar-user .avatar{width:43px;height:43px}.chevron{display:none}
+ .notification-panel{position:fixed;right:10px;top:78px;width:min(340px,calc(100vw - 20px));max-height:65vh}
+ .main-tabs{position:sticky!important;top:72px!important;z-index:40;height:auto!important;display:flex!important;flex-direction:row!important;align-items:stretch!important;overflow-x:auto!important;overflow-y:hidden!important;padding:8px 10px!important;gap:6px!important;background:#003d2e!important;box-shadow:0 3px 10px rgba(0,0,0,.08);scrollbar-width:none}
+ .main-tabs::-webkit-scrollbar{display:none}.sidebar-brand{display:none!important}.main-tabs button.main-tab{width:auto!important;min-width:max-content!important;flex:0 0 auto!important;padding:13px 18px!important;font-size:15px!important;border-radius:12px!important;justify-content:center!important}.main-tabs button[data-page="conta"]{margin-top:2px!important;border-top:0!important;padding-top:13px!important}
+ /* SUBPESTANAS VERTICAIS NO ANDROID */
+ .subtabs{position:relative!important;top:auto!important;z-index:35;display:flex!important;flex-direction:column!important;width:100%;box-sizing:border-box;padding:7px 12px 9px!important;gap:3px!important;background:#f0f6f3!important;border-bottom:1px solid #d8e6df!important;box-shadow:0 2px 8px rgba(0,0,0,.05)!important}
+ .subtabs.hidden{display:none!important}.subtabs:before{display:block!important;color:#174c3b!important;font-size:11px!important;font-weight:900!important;padding:3px 8px 5px!important;margin:0!important}.subtabs#subnav-inicio:before{content:'INÍCIO'}.subtabs#subnav-acessos:before{content:'ACESSOS'}.subtabs#subnav-visita:before{content:'VISITA'}
+ .subtab{width:100%!important;box-sizing:border-box!important;min-height:46px!important;padding:11px 13px!important;border-radius:10px!important;background:#fff!important;color:#284c3d!important;border:1px solid #dce8e2!important;text-align:left!important;font-size:14px!important;font-weight:800!important;box-shadow:0 2px 6px rgba(18,59,43,.05)!important}.subtab:before{content:'› '!important;color:#078b59!important}.subtab.active{background:#078b59!important;color:#fff!important;border-color:#078b59!important}.subtab.active:before{color:#fff!important}
+ #application>main{padding:18px 12px 32px!important;overflow:visible!important}.dashboard-heading{margin-bottom:16px}.dashboard-heading h2{font-size:27px!important}.dashboard-heading p{font-size:12px!important}.dashboard-date{min-width:0!important;width:100%;padding:12px 14px!important}.dashboard-date small{font-size:11px}.dashboard-date strong{font-size:22px}
+ .dashboard-menu-cards{grid-template-columns:1fr 1fr!important;gap:10px!important}.quick-card{min-height:165px!important;padding:14px 10px!important;border-radius:15px!important}.quick-icon{width:56px!important;height:56px!important;font-size:22px!important}.quick-card strong{font-size:12px!important;line-height:1.25}.quick-card>b{font-size:28px!important}.quick-card>span:last-child{font-size:10px!important;padding:8px 10px!important}.search-card{grid-column:1/-1!important;min-height:145px!important}.plate-search{max-width:100%!important}.plate-search input{font-size:14px!important;padding:12px!important}.plate-search button{width:48px!important}
+ .page>h2{font-size:26px!important}.page .form,.page .panel,.page .card,.page .request-card{padding:18px!important}.page label{font-size:13px!important}.page input,.page select,.page textarea{font-size:16px!important;min-height:48px}.btn{font-size:14px!important;min-height:46px!important}.security-banner{margin-top:14px!important}.activity-panel{display:none!important}
+}
+@media(min-width:761px){.subtabs{flex-direction:row!important;align-items:center!important;flex-wrap:wrap!important}.subtab{width:auto!important}.subtabs:before{display:none!important}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script></head>
@@ -191,8 +211,8 @@ body.app-open .ferti-title,body.app-open .ferti-logo{display:none}
 <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 <div id="application" class="hidden">
 <div class="dashboard-topbar">
-  <div class="topbar-brand"><div class="topbar-mark">F</div><div><strong>FERTI AGRO</strong><span>COLABORADORES · VEÍCULOS · VISITANTES</span></div></div>
-  <div class="topbar-actions"><div class="topbar-notify" aria-label="Notificações">🔔<span class="notify-dot">3</span></div><div class="topbar-user"><div class="avatar">👤</div><div><strong id="topbarUserName">CONTA</strong><span id="topbarUserRole">ADMIN</span></div><span class="chevron">⌄</span></div></div>
+  <div class="topbar-brand"><button type="button" class="brand-home" onclick="goToPage('inicio')" aria-label="Ir para início"><img id="topbarLogo" alt="Ferti Agro"></button><div><strong>FERTI AGRO</strong><span>COLABORADORES · VEÍCULOS · VISITANTES</span></div></div>
+  <div class="topbar-actions"><div class="notification-wrap"><button type="button" class="topbar-notify" id="notificationButton" aria-label="Abrir notificações" aria-expanded="false">🔔<span class="notify-dot" id="topNotifyDot">0</span></button><div class="notification-panel hidden" id="notificationPanel"><div class="notification-panel-head"><strong>NOTIFICAÇÕES</strong><button type="button" id="closeNotifications" aria-label="Fechar">×</button></div><div id="notificationList" class="notification-list"><div class="notification-empty">NENHUMA NOTIFICAÇÃO NOVA.</div></div></div></div><button type="button" class="topbar-user" id="topbarUserButton" onclick="goToPage('inicio')" aria-label="Ir para início"><span class="avatar"><img id="topbarAvatar" alt="Conta"></span><span class="topbar-user-info"><strong id="topbarUserName">CONTA</strong><span id="topbarUserRole">ADMIN</span></span><span class="chevron">⌄</span></button></div>
 </div>
 <nav class="tabs main-tabs">
 <div class="sidebar-brand"><img id="sidebarLogo" alt="Ferti Agro"><div><strong>CONTROLE DE ACESSO</strong><span>FERTI AGRO RR</span></div></div>
@@ -780,6 +800,73 @@ boot();
     setInterval(()=>{const d=new Date();const date=document.getElementById('dashboardDate'),time=document.getElementById('dashboardTime');if(date)date.textContent=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();if(time)time.textContent=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});},1000);
   });
   const oldUpdateUIForRole=window.updateUIForRole;
+})();
+</script>
+
+<script>
+/* ===== NAVEGAÇÃO ANDROID ===== */
+
+function goToPage(id){
+  const sub=document.querySelector('.subtab[data-page="'+id+'"]');
+  if(sub && !sub.classList.contains('hidden')){ sub.click(); return; }
+  const role=currentProfile?.role||'colaborador';
+  const allowed=rolePages[role]||rolePages.colaborador;
+  if(!allowed.has(id)){toast('SEU PERFIL NÃO TEM ACESSO A ESTA ÁREA.');return;}
+  showPage(id);
+  const main=document.querySelector('.main-tab[data-menu="'+(id==='inicio'||['colaborador','veiculo','consulta'].includes(id)?'inicio':id==='acessos'||['acessos','solicitar','minhasSolicitacoes','solicitacoes'].includes(id)?'acessos':'visita')+'"]');
+  const menu=main?.dataset.menu;
+  if(menu){
+    document.querySelectorAll('.main-tab[data-menu]').forEach(x=>x.classList.toggle('active',x===main));
+    document.querySelectorAll('.subtabs').forEach(x=>x.classList.toggle('hidden',x.id!=='subnav-'+menu));
+    document.querySelector('.subtab[data-page="'+id+'"]')?.classList.add('active');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===== TOPBAR: LOGO, NOTIFICAÇÕES E PERFIL ===== */
+(function(){
+  function syncBrandAssets(){
+    const src=document.querySelector('.ferti-logo img')?.src;
+    const top=document.getElementById('topbarLogo');
+    const side=document.getElementById('sidebarLogo');
+    if(src){if(top)top.src=src;if(side)side.src=src;}
+    const avatar=document.getElementById('topbarAvatar');
+    if(avatar && !avatar.src) avatar.src='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#e6f0eb"/><circle cx="50" cy="38" r="17" fill="#167a57"/><path d="M20 83c4-19 18-28 30-28s26 9 30 28" fill="#167a57"/></svg>');
+  }
+  function notificationData(){
+    const role=currentProfile?.role||'colaborador';
+    const list=document.getElementById('notificationList'); if(!list)return;
+    let items=[];
+    if(['gerente','admin'].includes(role)){
+      const badge=document.getElementById('pendingBadge'); const count=parseInt(badge?.textContent||'0',10)||0;
+      if(count>0)items.push({icon:'🔐',title:'SOLICITAÇÕES PENDENTES',text:`${count} SOLICITAÇÃO(ÕES) AGUARDANDO DECISÃO.`,page:'solicitacoes'});
+    }
+    if(role==='colaborador'){
+      items.push({icon:'📋',title:'MINHAS SOLICITAÇÕES',text:'CONSULTE O STATUS DAS SUAS SOLICITAÇÕES.',page:'minhasSolicitacoes'});
+    }
+    if(!items.length){list.innerHTML='<div class="notification-empty">NENHUMA NOTIFICAÇÃO NOVA.</div>';return;}
+    list.innerHTML=items.map((x,i)=>`<button type="button" class="notification-item" data-notification-page="${x.page}"><span class="n-icon">${x.icon}</span><span><strong>${x.title}</strong><span>${x.text}</span></span></button>`).join('');
+  }
+  function updateDot(){
+    const dot=document.getElementById('topNotifyDot'); if(!dot)return;
+    const role=currentProfile?.role||'colaborador';
+    const badge=document.getElementById('pendingBadge');
+    let n=['gerente','admin'].includes(role)?(parseInt(badge?.textContent||'0',10)||0):0;
+    dot.textContent=n>99?'99+':String(n); dot.style.display=n?'grid':'none'; notificationData();
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    syncBrandAssets();
+    const b=document.getElementById('notificationButton'),p=document.getElementById('notificationPanel'),close=document.getElementById('closeNotifications');
+    b?.addEventListener('click',e=>{e.stopPropagation();notificationData();const open=p.classList.toggle('hidden')===false;b.setAttribute('aria-expanded',String(open));});
+    close?.addEventListener('click',()=>{p.classList.add('hidden');b.setAttribute('aria-expanded','false')});
+    p?.addEventListener('click',e=>{const x=e.target.closest('[data-notification-page]');if(!x)return;p.classList.add('hidden');goToPage(x.dataset.notificationPage)});
+    document.addEventListener('click',e=>{if(p&&!p.classList.contains('hidden')&&!e.target.closest('.notification-wrap')){p.classList.add('hidden');b?.setAttribute('aria-expanded','false')}});
+    setTimeout(updateDot,500);
+  });
+  const oldRefresh=window.refresh;
+  if(typeof oldRefresh==='function')window.refresh=function(){const r=oldRefresh.apply(this,arguments);setTimeout(updateDot,50);return r};
+  const oldUpdate=window.updateUIForRole;
+  if(typeof oldUpdate==='function')window.updateUIForRole=function(){const r=oldUpdate.apply(this,arguments);setTimeout(()=>{syncBrandAssets();updateDot()},30);return r};
 })();
 </script>
 </body></html>
