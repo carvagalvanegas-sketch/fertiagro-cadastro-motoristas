@@ -18,6 +18,58 @@ label{display:block;font-size:11px;font-weight:900;color:#53675d;margin:0 0 6px}
 @media(max-width:800px){.header-main{min-height:70px;padding:8px 10px}.logo{width:86px;height:42px}.brand-text h1{font-size:16px}.brand-text p{font-size:8px}.head-actions{gap:4px}.icon-btn{width:42px;height:42px;font-size:20px}.main-nav{padding:6px;gap:4px}.main-tab{font-size:10px;padding:11px 4px;min-height:46px}.subnav{display:grid;grid-template-columns:1fr;gap:6px;padding:8px}.sub-tab{width:100%;text-align:left;min-height:46px;font-size:12px;padding:12px}.container{padding:13px 10px 28px}.page-title{font-size:25px}.grid,.grid3{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr;gap:8px}.stat{padding:13px}.stat b{font-size:25px}.quick-grid{grid-template-columns:1fr}.card{padding:14px;border-radius:15px}.search{flex-direction:column}.search .btn{width:100%}.actions{flex-direction:column}.actions .btn{width:100%}.account-info{grid-template-columns:1fr}.auth-shell{display:block;min-height:auto;padding:20px 12px}.auth-intro{display:none}.auth-panel{padding:20px}.auth-panel h2{font-size:22px}.request-head,.active-head{flex-direction:column}.meta{grid-template-columns:1fr}.notif-panel{top:62px}.table-wrap{margin-inline:-2px} }
 @media(min-width:801px){.subnav{justify-content:flex-start}.sub-tab{min-width:150px}}
 </style>
+
+<style id="ferti-agro-header-style">
+/* ESTILO DO CABEÇALHO FERTI AGRO — APLICADO SOMENTE AO CABEÇALHO */
+.header{
+  position:sticky;top:0;z-index:50;
+  background:linear-gradient(105deg,#0d3b28 0%,#185b3d 55%,#123b2b 100%);
+  border-bottom:0;
+  box-shadow:0 4px 18px rgba(18,59,42,.15);
+  color:#fff;
+}
+.header-main{
+  width:100%;min-height:78px;display:flex;align-items:center;gap:14px;
+  padding:14px clamp(16px,2.2vw,56px);
+}
+.brand{
+  display:flex;align-items:center;gap:14px;min-width:0;flex:1;
+  color:#fff;background:transparent;border:0;padding:0;text-align:left;
+}
+.logo{width:142px;height:50px;display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.brand-text{min-width:0}
+.brand-text h1{margin:0;font-size:20px;letter-spacing:.7px;font-weight:800;color:#fff}
+.brand-text p{margin:4px 0 0;color:#b9c9c0;font-size:12px;letter-spacing:.2px;white-space:nowrap}
+.head-actions{display:flex;align-items:center;gap:8px;flex:none}
+.icon-btn{width:46px;height:46px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.10);color:#fff;border-radius:50%;font-size:22px;position:relative;display:grid;place-items:center}
+.icon-btn:active{background:rgba(255,255,255,.18)}
+.user-btn{background:rgba(255,255,255,.12);color:#fff;font-size:24px}
+.badge{position:absolute;right:-2px;top:-2px;min-width:20px;height:20px;padding:0 5px;border-radius:20px;background:#c83e38;color:#fff;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.notif-panel{position:absolute;right:clamp(12px,2.2vw,56px);top:72px;width:min(360px,calc(100vw - 24px));background:#fff;color:#183126;border:1px solid #cfe1d6;border-radius:16px;box-shadow:0 10px 30px rgba(20,62,43,.18);padding:14px;z-index:60}
+.notif-panel h3{margin:0 0 10px;font-size:14px;color:#185d3d}
+.notif-item{padding:11px;border-radius:10px;background:#eaf4ee;margin-top:8px;font-size:11px;line-height:1.5}
+.notif-empty{padding:16px;text-align:center;color:#66756e;font-size:11px}
+@media(max-width:600px){
+  .header-main{min-height:72px;padding:11px 12px;gap:10px}
+  .logo{width:112px;height:44px}
+  .brand{gap:10px}
+  .brand-text h1{font-size:18px;letter-spacing:.5px}
+  .brand-text p{font-size:9px;margin-top:3px}
+  .head-actions{gap:6px}
+  .icon-btn{width:44px;height:44px;font-size:21px}
+  .user-btn{font-size:23px}
+  .notif-panel{top:66px;right:10px;width:calc(100vw - 20px)}
+}
+@media(max-width:390px){
+  .header-main{padding:9px 10px}
+  .logo{width:92px;height:40px}
+  .brand{gap:8px}
+  .brand-text h1{font-size:16px}
+  .brand-text p{font-size:8px}
+  .icon-btn{width:40px;height:40px}
+}
+</style>
 </head>
 <body>
 <header class="header">
@@ -64,7 +116,7 @@ label{display:block;font-size:11px;font-weight:900;color:#53675d;margin:0 0 6px}
     <section id="page-historico" class="page hidden"><h2 class="page-title">HISTÓRICO DE VISITAS</h2><div class="card"><div class="search"><input id="busca" placeholder="BUSCAR NOME"><button class="btn light" id="btnClearHistory">LIMPAR</button></div><div id="contador" class="muted"></div><div id="listaHistorico"></div><div class="actions"><button class="btn light" id="visitPrev">ANTERIOR</button><button class="btn light" id="visitNext">PRÓXIMA PÁGINA</button></div></div></section>
     <section id="page-qr" class="page hidden"><h2 class="page-title">QR DE ENTRADA</h2><div class="card" style="text-align:center"><div class="notice">O QR ABRE A NOVA ENTRADA. O ACESSO CONTINUA PROTEGIDO PELO LOGIN.</div><div class="field"><label>ENDEREÇO PUBLICADO</label><input id="publishedUrl" type="url" placeholder="https://FERTIAGRO-CADASTRO-MOTORISTAS.VERCEL.APP/"></div><div class="actions"><button class="btn dark" id="btnQr">GERAR QR</button><button class="btn blue" id="btnPrintQr">IMPRIMIR QR</button></div><div id="qrNotice" class="notice" style="margin-top:12px">INFORME O ENDEREÇO HTTPS PARA GERAR O QR.</div><div id="qrEntrada" class="qr"></div></div></section>
 
-    <section id="page-conta" class="page hidden"><h2 class="page-title">MINHA CONTA</h2><div class="card"><div class="account-info"><div><label>NOME</label><input id="loggedName" readonly></div><div><label>E-MAIL</label><input id="loggedEmail" readonly></div><div><label>PERFIL</label><input id="loggedRole" readonly></div><div><label>STATUS</label><input value="CONECTADO" readonly></div></div><div class="role-box" style="margin-top:12px"><b>PERMISSÕES:</b><br>COLABORADOR: SOLICITA ACESSO E ACOMPANHA SUAS SOLICITAÇÕES.<br>GERENTE: GERENCIA COLABORADORES, VEÍCULOS E SOLICITAÇÕES.<br>PORTARIA: CONTROLA ENTRADAS E VISITANTES.<br>ADMIN: ACESSO ADMINISTRATIVO COMPLETO.</div><button class="btn danger" id="logoutBtn" style="margin-top:14px">SAIR DA CONTA</button></div></section>
+    <section id="page-conta" class="page hidden"><h2 class="page-title">MINHA CONTA</h2><div class="card"><div class="account-info"><div><label>NOME</label><input id="loggedName" readonly></div><div><label>E-MAIL</label><input id="loggedEmail" readonly></div><div><label>PERFIL</label><input id="loggedRole" readonly></div></div><button class="btn danger" id="logoutBtn" style="margin-top:14px">SAIR DA CONTA</button></div></section>
     <div class="footer">FERTI AGRO · SISTEMA DE CADASTRO E CONTROLE DE VEÍCULOS E ACESSOS</div>
   </main>
 </div>
@@ -91,7 +143,7 @@ function showAuth(view){$('authScreen').classList.remove('hidden');$('app').clas
 function redirectOpts(){return /^https?:$/.test(location.protocol)?{emailRedirectTo:location.href.split('?')[0].split('#')[0]}:{}}
 function setMain(group){document.querySelectorAll('.main-tab').forEach(b=>b.classList.toggle('active',b.dataset.group===group));renderSubnav(group)}
 const groups={inicio:[['inicio','🏠 INÍCIO'],['colaborador','👤 COLABORADOR'],['veiculo','🚗 VEÍCULO'],['consulta','🔎 CONSULTAR PLACA']],acessos:[['acessos','🚪 ACESSOS'],['solicitar','📝 SOLICITAR ACESSO'],['minhas-solicitacoes','📌 MINHAS SOLICITAÇÕES'],['solicitacoes','🔐 SOLICITAÇÕES']],visita:[['entrada','📋 NOVA VISITA'],['ativos','👥 VISITANTES ATIVOS'],['historico','🗂️ HISTÓRICO'],['qr','🔳 QR DE ENTRADA']],conta:[['conta','👤 CONTA']]};
-function allowed(id){const r=currentProfile?.role;if(id==='inicio'||id==='conta')return !!currentUser;if(['colaborador','veiculo','consulta','acessos'].includes(id))return ['gerente','portaria','admin'].includes(r);if(id==='solicitar'||id==='minhas-solicitacoes')return !!currentUser&&r==='colaborador';if(id==='solicitacoes')return isStaff();if(id==='entrada'||id==='qr')return ['portaria','admin'].includes(r);if(id==='ativos'||id==='historico')return ['portaria','admin','gerente'].includes(r);return false}
+function allowed(id){const r=currentProfile?.role;if(id==='inicio'||id==='conta')return !!currentUser;if(['colaborador','veiculo','consulta','acessos'].includes(id))return ['gerente','portaria','admin'].includes(r);if(id==='solicitar'||id==='minhas-solicitacoes')return !!currentUser&&['colaborador','admin'].includes(r);if(id==='solicitacoes')return isStaff();if(id==='entrada'||id==='qr')return ['portaria','admin'].includes(r);if(id==='ativos'||id==='historico')return ['portaria','admin','gerente'].includes(r);return false}
 function visibleItems(group){return groups[group].filter(([id])=>allowed(id))}
 function renderSubnav(group){const nav=$('subNav');const items=visibleItems(group);nav.innerHTML=items.map(([id,label],i)=>`<button class="sub-tab" data-page="${id}">${label}</button>`).join('');nav.querySelectorAll('.sub-tab').forEach(b=>b.onclick=()=>openPage(b.dataset.page));if(items.length&&!document.getElementById('page-'+items[0][0]).classList.contains('hidden'))return}
 function openPage(id){if(!allowed(id)){toast('SEU PERFIL NÃO TEM ACESSO A ESTA ÁREA.');return}document.querySelectorAll('.page').forEach(p=>p.classList.toggle('hidden',p.id!=='page-'+id));let group=Object.keys(groups).find(g=>groups[g].some(x=>x[0]===id))||'inicio';setMain(group);$('subNav').querySelectorAll('.sub-tab').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='solicitacoes')loadRequests();if(id==='solicitar'||id==='minhas-solicitacoes')loadMyRequests();if(['entrada','ativos','historico'].includes(id))loadVisitors();if(id==='qr')generateQR()}
